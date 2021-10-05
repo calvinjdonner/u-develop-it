@@ -1,5 +1,6 @@
 const mysql = require('mysql2');
 const express = require('express');
+const { query } = require('express');
 const PORT = process.env.PORT || 3001;
 const app = express();
 
@@ -12,7 +13,7 @@ const db = mysql.createConnection(
     {
         host: 'localhost',
         // Your MySQL username,
-        user: 'calvinjdonner',
+        user: 'root',
         // Your MySQL password
         password: 'baN@na7147!',
         database: 'election'
@@ -31,4 +32,32 @@ app.listen(PORT, () => {
 
 db.query(`SELECT * FROM candidates`, (err, rows) => {
     console.log(rows);
+});
+
+//GET a single candidate
+db.query(`SELECT * FROM candidates WHERE id = 1`, (err, row) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(row);
+});
+
+//Delete a candidate
+db.query(`DELETE FROM candidates WHERE id = ?`, 1, (err, result) => {
+    if (err) {
+        console.log(err);
+    }
+    console.log(result);
+});
+
+//Create a candidate
+const sql = `INSERT INTO candidates (id, first_name, last_name, industry_connected) 
+              VALUES (?,?,?,?)`;
+const params = [1, 'Ronald', 'Firbank', 1];
+
+db.query(sql, params, (err, result) => {
+  if (err) {
+    console.log(err);
+  }
+  console.log(result);
 });
